@@ -9,8 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>producer</artifactId>
-
+    <artifactId>consumer</artifactId>
 
     <dependencies>
         <dependency>
@@ -30,4 +29,6 @@
             <artifactId>kafka-avro-serializer</artifactId>
         </dependency>
     </dependencies>
+
+
 </project>

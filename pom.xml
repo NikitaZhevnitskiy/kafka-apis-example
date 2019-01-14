@@ -11,6 +11,7 @@
         <module>admin-client</module>
         <module>schema</module>
         <module>producer</module>
+        <module>consumer</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -64,6 +65,11 @@
                 <groupId>io.confluent</groupId>
                 <artifactId>kafka-avro-serializer</artifactId>
                 <version>${confluent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.25</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
