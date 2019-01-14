@@ -1,0 +1,31 @@
+{
+  "namespace": "ru.zhenik.kafkaapis.schema.avro",
+  "name": "Users",
+  "doc": "User list",
+  "type": "record",
+  "version":"1",
+  "fields": [
+    {
+      "name": "list",
+      "doc": "List of users",
+      "type": [
+        "null",
+        {
+          "type": "array",
+          "items": {
+            "type": "record",
+            "name": "User",
+            "fields": [
+              {
+                "name": "id",
+                "type": "string",
+                "doc": "user id"
+              }
+            ]
+          }
+        }
+      ],
+      "default": null
+    }
+  ]
+}
