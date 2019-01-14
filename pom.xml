@@ -10,6 +10,7 @@
     <modules>
         <module>admin-client</module>
         <module>schema</module>
+        <module>producer</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -24,6 +25,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>ru.zhenik.kafka-apis</groupId>
+                <artifactId>schema</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.typesafe</groupId>
                 <artifactId>config</artifactId>
