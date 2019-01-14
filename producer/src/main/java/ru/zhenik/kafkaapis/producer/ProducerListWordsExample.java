@@ -23,7 +23,7 @@ public class ProducerListWordsExample {
 
     public ProducerListWordsExample() {
         this.properties=defaultProperties();
-        this.topicName="word-topic-v1";
+        this.topicName="words-v1";
         this.producer=new KafkaProducer<String, Words>(properties);
     }
 

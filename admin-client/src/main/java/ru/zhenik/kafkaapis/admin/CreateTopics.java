@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 public class CreateTopics {
     public static void main(String[] args) {
-        createTopic("topic-1", 5, (short) 1);
+        createTopic("words-v1", 5, (short) 1);
         createTopicVerifyCluster("topic-failt-to-create", 5, (short) 2);
 
     }
