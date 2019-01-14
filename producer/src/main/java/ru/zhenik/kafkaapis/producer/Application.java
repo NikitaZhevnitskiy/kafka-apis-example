@@ -1,24 +1,26 @@
 package ru.zhenik.kafkaapis.producer;
 
-import ru.zhenik.kafkaapis.schema.avro.User;
-import ru.zhenik.kafkaapis.schema.avro.Users;
+import ru.zhenik.kafkaapis.schema.avro.Word;
+import ru.zhenik.kafkaapis.schema.avro.Words;
+
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 public class Application {
     public static void main(String[] args) {
-        ProducerListUsersExample producer = new ProducerListUsersExample();
+        ProducerListWordsExample producer = new ProducerListWordsExample();
 
-        User user1 = User.newBuilder().setId("user-id-1").build();
-        User user2 = User.newBuilder().setId("user-id-2").build();
-        Users users = Users.newBuilder().setList(Arrays.asList(user1, user2)).build();
+        Word word1 = Word.newBuilder().setPayload("cat").build();
+        Word word2 = Word.newBuilder().setPayload("home").build();
+
+        Words words = Words.newBuilder().setList(Arrays.asList(word1, word2)).build();
 
         // async ack
-        producer.produceWithAsyncAck(users);
+        producer.produceWithAsyncAck(words);
 
         // sync ack
         try {
-            producer.produceWithSyncAck(users);
+            producer.produceWithSyncAck(words);
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

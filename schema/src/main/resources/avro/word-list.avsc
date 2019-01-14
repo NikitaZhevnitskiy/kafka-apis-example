@@ -1,25 +1,31 @@
 {
   "namespace": "ru.zhenik.kafkaapis.schema.avro",
-  "name": "Users",
-  "doc": "User list",
+  "name": "Words",
+  "doc": "Word list",
   "type": "record",
   "version":"1",
   "fields": [
     {
       "name": "list",
-      "doc": "List of users",
+      "doc": "List of words",
       "type": [
         "null",
         {
           "type": "array",
           "items": {
             "type": "record",
-            "name": "User",
+            "name": "Word",
             "fields": [
               {
-                "name": "id",
+                "name": "payload",
                 "type": "string",
-                "doc": "user id"
+                "doc": "Word"
+              },
+              {
+                "name": "sorted",
+                "doc": "Sorted payload",
+                "type": ["null","string"],
+                "default": null
               }
             ]
           }

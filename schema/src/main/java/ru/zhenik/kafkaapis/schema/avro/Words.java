@@ -11,25 +11,25 @@ import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
 @SuppressWarnings("all")
-/** User list */
+/** Word list */
 @org.apache.avro.specific.AvroGenerated
-public class Users extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 312372040238090937L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Users\",\"namespace\":\"ru.zhenik.kafkaapis.schema.avro\",\"doc\":\"User list\",\"fields\":[{\"name\":\"list\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"User\",\"fields\":[{\"name\":\"id\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"user id\"}]}}],\"doc\":\"List of users\",\"default\":null}],\"version\":\"1\"}");
+public class Words extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
+  private static final long serialVersionUID = -1534782436926772425L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Words\",\"namespace\":\"ru.zhenik.kafkaapis.schema.avro\",\"doc\":\"Word list\",\"fields\":[{\"name\":\"list\",\"type\":[\"null\",{\"type\":\"array\",\"items\":{\"type\":\"record\",\"name\":\"Word\",\"fields\":[{\"name\":\"payload\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"},\"doc\":\"Word\"},{\"name\":\"sorted\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"doc\":\"Sorted payload\",\"default\":null}]}}],\"doc\":\"List of words\",\"default\":null}],\"version\":\"1\"}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
 
-  private static final BinaryMessageEncoder<Users> ENCODER =
-      new BinaryMessageEncoder<Users>(MODEL$, SCHEMA$);
+  private static final BinaryMessageEncoder<Words> ENCODER =
+      new BinaryMessageEncoder<Words>(MODEL$, SCHEMA$);
 
-  private static final BinaryMessageDecoder<Users> DECODER =
-      new BinaryMessageDecoder<Users>(MODEL$, SCHEMA$);
+  private static final BinaryMessageDecoder<Words> DECODER =
+      new BinaryMessageDecoder<Words>(MODEL$, SCHEMA$);
 
   /**
    * Return the BinaryMessageDecoder instance used by this class.
    */
-  public static BinaryMessageDecoder<Users> getDecoder() {
+  public static BinaryMessageDecoder<Words> getDecoder() {
     return DECODER;
   }
 
@@ -37,36 +37,36 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
    * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
    * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
    */
-  public static BinaryMessageDecoder<Users> createDecoder(SchemaStore resolver) {
-    return new BinaryMessageDecoder<Users>(MODEL$, SCHEMA$, resolver);
+  public static BinaryMessageDecoder<Words> createDecoder(SchemaStore resolver) {
+    return new BinaryMessageDecoder<Words>(MODEL$, SCHEMA$, resolver);
   }
 
-  /** Serializes this Users to a ByteBuffer. */
+  /** Serializes this Words to a ByteBuffer. */
   public java.nio.ByteBuffer toByteBuffer() throws java.io.IOException {
     return ENCODER.encode(this);
   }
 
-  /** Deserializes a Users from a ByteBuffer. */
-  public static Users fromByteBuffer(
+  /** Deserializes a Words from a ByteBuffer. */
+  public static Words fromByteBuffer(
       java.nio.ByteBuffer b) throws java.io.IOException {
     return DECODER.decode(b);
   }
 
-  /** List of users */
-   private java.util.List<ru.zhenik.kafkaapis.schema.avro.User> list;
+  /** List of words */
+   private java.util.List<ru.zhenik.kafkaapis.schema.avro.Word> list;
 
   /**
    * Default constructor.  Note that this does not initialize fields
    * to their default values from the schema.  If that is desired then
    * one should use <code>newBuilder()</code>.
    */
-  public Users() {}
+  public Words() {}
 
   /**
    * All-args constructor.
-   * @param list List of users
+   * @param list List of words
    */
-  public Users(java.util.List<ru.zhenik.kafkaapis.schema.avro.User> list) {
+  public Words(java.util.List<ru.zhenik.kafkaapis.schema.avro.Word> list) {
     this.list = list;
   }
 
@@ -83,54 +83,54 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
   @SuppressWarnings(value="unchecked")
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
-    case 0: list = (java.util.List<ru.zhenik.kafkaapis.schema.avro.User>)value$; break;
+    case 0: list = (java.util.List<ru.zhenik.kafkaapis.schema.avro.Word>)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
 
   /**
    * Gets the value of the 'list' field.
-   * @return List of users
+   * @return List of words
    */
-  public java.util.List<ru.zhenik.kafkaapis.schema.avro.User> getList() {
+  public java.util.List<ru.zhenik.kafkaapis.schema.avro.Word> getList() {
     return list;
   }
 
 
   /**
-   * Creates a new Users RecordBuilder.
-   * @return A new Users RecordBuilder
+   * Creates a new Words RecordBuilder.
+   * @return A new Words RecordBuilder
    */
-  public static ru.zhenik.kafkaapis.schema.avro.Users.Builder newBuilder() {
-    return new ru.zhenik.kafkaapis.schema.avro.Users.Builder();
+  public static ru.zhenik.kafkaapis.schema.avro.Words.Builder newBuilder() {
+    return new ru.zhenik.kafkaapis.schema.avro.Words.Builder();
   }
 
   /**
-   * Creates a new Users RecordBuilder by copying an existing Builder.
+   * Creates a new Words RecordBuilder by copying an existing Builder.
    * @param other The existing builder to copy.
-   * @return A new Users RecordBuilder
+   * @return A new Words RecordBuilder
    */
-  public static ru.zhenik.kafkaapis.schema.avro.Users.Builder newBuilder(ru.zhenik.kafkaapis.schema.avro.Users.Builder other) {
-    return new ru.zhenik.kafkaapis.schema.avro.Users.Builder(other);
+  public static ru.zhenik.kafkaapis.schema.avro.Words.Builder newBuilder(ru.zhenik.kafkaapis.schema.avro.Words.Builder other) {
+    return new ru.zhenik.kafkaapis.schema.avro.Words.Builder(other);
   }
 
   /**
-   * Creates a new Users RecordBuilder by copying an existing Users instance.
+   * Creates a new Words RecordBuilder by copying an existing Words instance.
    * @param other The existing instance to copy.
-   * @return A new Users RecordBuilder
+   * @return A new Words RecordBuilder
    */
-  public static ru.zhenik.kafkaapis.schema.avro.Users.Builder newBuilder(ru.zhenik.kafkaapis.schema.avro.Users other) {
-    return new ru.zhenik.kafkaapis.schema.avro.Users.Builder(other);
+  public static ru.zhenik.kafkaapis.schema.avro.Words.Builder newBuilder(ru.zhenik.kafkaapis.schema.avro.Words other) {
+    return new ru.zhenik.kafkaapis.schema.avro.Words.Builder(other);
   }
 
   /**
-   * RecordBuilder for Users instances.
+   * RecordBuilder for Words instances.
    */
-  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<Users>
-    implements org.apache.avro.data.RecordBuilder<Users> {
+  public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<Words>
+    implements org.apache.avro.data.RecordBuilder<Words> {
 
-    /** List of users */
-    private java.util.List<ru.zhenik.kafkaapis.schema.avro.User> list;
+    /** List of words */
+    private java.util.List<ru.zhenik.kafkaapis.schema.avro.Word> list;
 
     /** Creates a new Builder */
     private Builder() {
@@ -141,7 +141,7 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
      * Creates a Builder by copying an existing Builder.
      * @param other The existing Builder to copy.
      */
-    private Builder(ru.zhenik.kafkaapis.schema.avro.Users.Builder other) {
+    private Builder(ru.zhenik.kafkaapis.schema.avro.Words.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.list)) {
         this.list = data().deepCopy(fields()[0].schema(), other.list);
@@ -150,10 +150,10 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
     }
 
     /**
-     * Creates a Builder by copying an existing Users instance
+     * Creates a Builder by copying an existing Words instance
      * @param other The existing instance to copy.
      */
-    private Builder(ru.zhenik.kafkaapis.schema.avro.Users other) {
+    private Builder(ru.zhenik.kafkaapis.schema.avro.Words other) {
             super(SCHEMA$);
       if (isValidValue(fields()[0], other.list)) {
         this.list = data().deepCopy(fields()[0].schema(), other.list);
@@ -163,20 +163,20 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
 
     /**
       * Gets the value of the 'list' field.
-      * List of users
+      * List of words
       * @return The value.
       */
-    public java.util.List<ru.zhenik.kafkaapis.schema.avro.User> getList() {
+    public java.util.List<ru.zhenik.kafkaapis.schema.avro.Word> getList() {
       return list;
     }
 
     /**
       * Sets the value of the 'list' field.
-      * List of users
+      * List of words
       * @param value The value of 'list'.
       * @return This builder.
       */
-    public ru.zhenik.kafkaapis.schema.avro.Users.Builder setList(java.util.List<ru.zhenik.kafkaapis.schema.avro.User> value) {
+    public ru.zhenik.kafkaapis.schema.avro.Words.Builder setList(java.util.List<ru.zhenik.kafkaapis.schema.avro.Word> value) {
       validate(fields()[0], value);
       this.list = value;
       fieldSetFlags()[0] = true;
@@ -185,7 +185,7 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
 
     /**
       * Checks whether the 'list' field has been set.
-      * List of users
+      * List of words
       * @return True if the 'list' field has been set, false otherwise.
       */
     public boolean hasList() {
@@ -195,10 +195,10 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
 
     /**
       * Clears the value of the 'list' field.
-      * List of users
+      * List of words
       * @return This builder.
       */
-    public ru.zhenik.kafkaapis.schema.avro.Users.Builder clearList() {
+    public ru.zhenik.kafkaapis.schema.avro.Words.Builder clearList() {
       list = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -206,10 +206,10 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
 
     @Override
     @SuppressWarnings("unchecked")
-    public Users build() {
+    public Words build() {
       try {
-        Users record = new Users();
-        record.list = fieldSetFlags()[0] ? this.list : (java.util.List<ru.zhenik.kafkaapis.schema.avro.User>) defaultValue(fields()[0]);
+        Words record = new Words();
+        record.list = fieldSetFlags()[0] ? this.list : (java.util.List<ru.zhenik.kafkaapis.schema.avro.Word>) defaultValue(fields()[0]);
         return record;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
@@ -218,8 +218,8 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   @SuppressWarnings("unchecked")
-  private static final org.apache.avro.io.DatumWriter<Users>
-    WRITER$ = (org.apache.avro.io.DatumWriter<Users>)MODEL$.createDatumWriter(SCHEMA$);
+  private static final org.apache.avro.io.DatumWriter<Words>
+    WRITER$ = (org.apache.avro.io.DatumWriter<Words>)MODEL$.createDatumWriter(SCHEMA$);
 
   @Override public void writeExternal(java.io.ObjectOutput out)
     throws java.io.IOException {
@@ -227,8 +227,8 @@ public class Users extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   @SuppressWarnings("unchecked")
-  private static final org.apache.avro.io.DatumReader<Users>
-    READER$ = (org.apache.avro.io.DatumReader<Users>)MODEL$.createDatumReader(SCHEMA$);
+  private static final org.apache.avro.io.DatumReader<Words>
+    READER$ = (org.apache.avro.io.DatumReader<Words>)MODEL$.createDatumReader(SCHEMA$);
 
   @Override public void readExternal(java.io.ObjectInput in)
     throws java.io.IOException {
