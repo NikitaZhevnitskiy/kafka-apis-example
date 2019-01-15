@@ -12,8 +12,9 @@ public class Application {
 
         Word word1 = Word.newBuilder().setPayload("cat").build();
         Word word2 = Word.newBuilder().setPayload("home").build();
+        Word word3 = Word.newBuilder().setPayload("tac").build();
 
-        Words words = Words.newBuilder().setList(Arrays.asList(word1, word2)).build();
+        Words words = Words.newBuilder().setList(Arrays.asList(word1, word2, word3)).build();
 
         // async ack
         producer.produceWithAsyncAck(words);

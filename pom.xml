@@ -12,6 +12,7 @@
         <module>schema</module>
         <module>producer</module>
         <module>consumer</module>
+        <module>stream</module>
     </modules>
     <packaging>pom</packaging>
 
