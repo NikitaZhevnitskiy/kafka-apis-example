@@ -7,14 +7,12 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.kstream.Produced;
 import ru.zhenik.kafkaapis.schema.avro.Word;
 import ru.zhenik.kafkaapis.schema.avro.Words;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Properties;
-import java.util.function.Function;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -62,23 +60,53 @@ public class StreamProcessing implements Runnable {
 
         final KStream<String, Words> sourceStream = builder.stream("words-v1", Consumed.with(Serdes.String(), wordsListSerdes));
 
+        // extract word from list and add sorted hash as a key
         sourceStream
                 // extract
                 .flatMapValues(Words::getList)
-                .through("word-v1")
-                //
                 .map( (ignored, word) -> {
                     final String payload = word.getPayload();
                     final String key = Stream.of(payload.split(""))
                             .sorted()
                             .collect(Collectors.joining());
-                    return KeyValue.pair(key, word);
+                    final Word wordWithHash = Word.newBuilder().setPayload(payload).setSorted(key).build();
+                    return KeyValue.pair(key, wordWithHash);
                 })
-                .to("sortedhash-word-v1");
+                .to("word-v1", Produced.with(Serdes.String(), wordSerdes));
 
-        return builder.build();
+        final KStream<String, Word> wordStream = builder.stream("word-v1", Consumed.with(Serdes.String(), wordSerdes));
+
+        // [key:value] => [hash:anagramCount]
+        wordStream
+                .groupByKey()
+                .count()
+                .toStream()
+                .to("anagram-hash-count-v1", Produced.valueSerde(Serdes.Long()));
+
+        // [key:value] => [hash:wordsList]
+        wordStream
+                .groupByKey()
+                .aggregate(
+                        () -> Words.newBuilder().setList(Collections.emptyList()).build(),
+                        (aggKey, newValue, aggValue) -> {
+                            System.out.println("OLD_LIST: "+aggValue.getList());
+                            final List<Word> listWithOneWord = Collections.singletonList(newValue);
+                            final List<Word> previousList = aggValue.getList();
+                            final List<Word> newList = Stream.concat(listWithOneWord.stream(), previousList.stream()).collect(Collectors.toList());
+                            System.out.println("NEW_LIST: "+newList);
+                            return Words.newBuilder().setList(newList).build();
+                        }
+                )
+                .toStream()
+                .to("hash-anagrams-v1", Produced.valueSerde(wordsListSerdes));
+
+
+        final Topology topology = builder.build();
+        System.out.println(topology.describe());
+        return topology;
     }
 
+    public void stopStreams() { Optional.ofNullable(kafkaStreams).ifPresent(KafkaStreams::close); }
 
 
     @Override
