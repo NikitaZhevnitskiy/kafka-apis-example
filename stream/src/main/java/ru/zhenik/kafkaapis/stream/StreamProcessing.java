@@ -58,7 +58,8 @@ public class StreamProcessing implements Runnable {
         final SpecificAvroSerde<Word> wordSerdes = new SpecificAvroSerde<>();
         wordSerdes.configure(schema, false);
 
-        final KStream<String, Words> sourceStream = builder.stream("words-v1", Consumed.with(Serdes.String(), wordsListSerdes));
+        // !NB source topics should exist before stream topology start
+        final KStream<String, Words> sourceStream = builder.stream(Topic.WORDS, Consumed.with(Serdes.String(), wordsListSerdes));
 
         // extract word from list and add sorted hash as a key
         sourceStream
@@ -70,18 +71,22 @@ public class StreamProcessing implements Runnable {
                             .sorted()
                             .collect(Collectors.joining());
                     final Word wordWithHash = Word.newBuilder().setPayload(payload).setSorted(key).build();
-                    return KeyValue.pair(key, wordWithHash);
-                })
-                .to("word-v1", Produced.with(Serdes.String(), wordSerdes));
 
-        final KStream<String, Word> wordStream = builder.stream("word-v1", Consumed.with(Serdes.String(), wordSerdes));
+                    final KeyValue<String, Word> pair = KeyValue.pair(key, wordWithHash);
+                    System.out.println("PAIR: "+pair);
+                    return pair;
+                })
+                .to(Topic.WORD, Produced.with(Serdes.String(), wordSerdes));
+
+        // !NB source topics should exist before stream topology start
+        final KStream<String, Word> wordStream = builder.stream(Topic.WORD, Consumed.with(Serdes.String(), wordSerdes));
 
         // [key:value] => [hash:anagramCount]
         wordStream
                 .groupByKey()
                 .count()
                 .toStream()
-                .to("anagram-hash-count-v1", Produced.valueSerde(Serdes.Long()));
+                .to(Topic.ANAGRAM_HASH_COUNT, Produced.with( Serdes.String(), Serdes.Long() ));
 
         // [key:value] => [hash:wordsList]
         wordStream
@@ -98,7 +103,7 @@ public class StreamProcessing implements Runnable {
                         }
                 )
                 .toStream()
-                .to("hash-anagrams-v1", Produced.valueSerde(wordsListSerdes));
+                .to(Topic.HASH_ANAGRAMS, Produced.with( Serdes.String(), wordsListSerdes) );
 
 
         final Topology topology = builder.build();
