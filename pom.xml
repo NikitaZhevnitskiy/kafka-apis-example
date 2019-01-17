@@ -13,6 +13,7 @@
         <module>producer</module>
         <module>consumer</module>
         <module>stream</module>
+        <module>other</module>
     </modules>
     <packaging>pom</packaging>
 
