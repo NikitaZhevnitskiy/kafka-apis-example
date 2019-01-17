@@ -1,0 +1,20 @@
+{
+  "name": "sink-postgres-word",
+  "config": {
+    "name": "sink-postgres-word",
+    "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+    "tasks.max": "1",
+    "topics": "word-v1",
+    "connection.url": "jdbc:postgresql://postgres:5432/postgres",
+    "connection.user":"postgres",
+    "connection.password":"postgres",
+    "key.converter":"org.apache.kafka.connect.storage.StringConverter",
+    "value.converter":"io.confluent.connect.avro.AvroConverter",
+    "value.converter.schema.registry.url":"http://localhost:8081",
+    "insert.mode":"upsert",
+    "auto.create":"true",
+    "auto.evolve":"true",
+    "pk.mode":"kafka",
+    "pk.fields":"__connect_topic,__connect_partition,__connect_offset"
+  }
+}

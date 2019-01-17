@@ -1,0 +1,17 @@
+{
+  "name": "source-jms-ibmmq-word",
+  "config": {
+    "connector.class": "io.confluent.connect.ibm.mq.IbmMQSourceConnectorConfig",
+    "kafka.topic":"word-ibmmq-v1",
+    "confluent.topic.replication.factor":"1",
+    "mq.hostname":"localhost",
+    "mq.port":"1414",
+    "mq.transport.type":"client",
+    "mq.queue.manager":"QM1",
+    "mq.channel":"DEV.APP.SVRCONN",
+    "jms.destination.name":"DEV.QUEUE.1",
+    "jms.destination.type":"queue",
+    "confluent.license":"",
+    "confluent.topic.bootstrap.servers":"localhost:9092"
+  }
+}
