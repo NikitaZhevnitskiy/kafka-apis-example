@@ -6,9 +6,34 @@ services:
     environment:
       ADV_HOST: localhost         # Change to 192.168.99.100 if using Docker Toolbox
       RUNTESTS: 0                 # Disable Running tests so the cluster starts faster
+      DISABLE: azure-documentdb,blockchain,bloomberg,cassandra,coap,druid,elastic,elastic5,ftp,hazelcast,hbase,influxdb,kudu,mongodb,mqtt,redis,rethink,voltdb,yahoo,hdfs,elasticsearch,s3,twitter
     ports:
       - "2181:2181"                 # Zookeeper
       - "3030:3030"                 # Landoop UI
       - "8081-8083:8081-8083"       # REST Proxy, Schema Registry, Kafka Connect ports
       - "9581-9585:9581-9585"       # JMX Ports
       - "9092:9092"                 # Kafka Broker
+    volumes:
+      - ./kafka-connect/kafka-connect-mq-source-1.0.1-uber.jar:/connectors/kafka-connect-mq-source-1.0.1-uber.jar
+
+  postgres:
+    image: postgres:11
+    environment:
+      POSTGRES_USER: postgres     # define credentials
+      POSTGRES_PASSWORD: postgres # define credentials
+      POSTGRES_DB: postgres       # define database
+    ports:
+      - 5432:5432                 # Postgres port
+
+  # IBM MQ
+  ibm-mq:
+    image: ibmcom/mq:9
+    environment:
+      LICENSE: accept
+      MQ_QMGR_NAME: QM1
+      #      Prometheus metrics, exposed on :9157/metrics
+      MQ_ENABLE_METRICS: "true"
+    ports:
+      - 1414:1414
+      - 9443:9443
+      - 9157:9157
