@@ -31,11 +31,11 @@ public class ProducerListWordsExample {
         final Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         properties.put(ProducerConfig.CLIENT_ID_CONFIG, "producer-words-example-id1");
-        // wait for acks from all  brokers when replicated
+        // wait for acks from all brokers, when replicated [-1, 0, 1]
         properties.put(ProducerConfig.ACKS_CONFIG, "all");
         // serializers for key:value pair is [String:Avro]
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class.getName());
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         properties.put(ProducerConfig.RETRIES_CONFIG, 0);
         // tune (increase) throughput
         properties.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
