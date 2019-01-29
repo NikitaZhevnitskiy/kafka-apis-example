@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>query-rest</module>
+        <module>producer-rest</module>
     </modules>
 
 
