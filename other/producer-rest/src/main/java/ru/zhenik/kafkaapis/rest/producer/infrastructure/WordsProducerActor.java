@@ -1,28 +1,40 @@
 package ru.zhenik.kafkaapis.rest.producer.infrastructure;
 
+import akka.actor.AbstractActor;
+import akka.actor.Props;
+import akka.event.Logging;
+import akka.event.LoggingAdapter;
+import akka.pattern.Patterns;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
 import ru.zhenik.kafkaapis.rest.producer.WebServerConfig;
+import ru.zhenik.kafkaapis.rest.producer.interfaces.rest.model.WordsListRepresentation;
+import ru.zhenik.kafkaapis.rest.producer.interfaces.rest.model.WordsTransformer;
 import ru.zhenik.kafkaapis.schema.avro.Words;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Logger;
+import java.util.concurrent.Future;
 
-// todo: make actor
-public class WordsProducer {
+// https://github.com/akka/akka-http-quickstart-java.g8/tree/10.1.x/src/main/g8/src/main/java/%24package%24
+public class WordsProducerActor extends AbstractActor {
 
-    private static final Logger logger = Logger.getLogger(WordsProducer.class.getName());
+    private final LoggingAdapter logger = Logging.getLogger(getContext().getSystem(), this);
+
     private final Properties properties;
     private final WebServerConfig config;
-    private KafkaProducer<String, Words> producer;
-    private String topicName;
+    private final KafkaProducer<String, Words> producer;
+    private final String topicName;
+    private final WordsTransformer wordsTransformer;
 
-    public WordsProducer(final WebServerConfig config) {
+    public WordsProducerActor(final WebServerConfig config, final WordsTransformer wordsTransformer) {
+        this.wordsTransformer = wordsTransformer;
         this.config = config;
         this.properties = defaultProperties();
         this.topicName = config.kafkaConfig.topic;
@@ -42,10 +54,10 @@ public class WordsProducer {
     }
 
     // Kafka producer send record async way, but there possibility wait for acks: async or sync (blocking) ways
-    public void sendToKafka(Words words) {
+    public Future<RecordMetadata> sendToKafka(final Words words) {
         // no key
         final ProducerRecord<String, Words> record = new ProducerRecord<>(topicName, words);
-        producer.send(
+        final Future<RecordMetadata> metadataFuture = producer.send(
                 record,
                 (metadata, exception) -> {
                     if (exception == null) {
@@ -59,12 +71,25 @@ public class WordsProducer {
                         exception.printStackTrace();
                     }
                 });
+        return metadataFuture;
     }
 
-//    public void produceWithSyncAck(Words words) throws ExecutionException, InterruptedException {
-//        // no key
-//        final ProducerRecord<String, Words> record = new ProducerRecord<>(topicName, words);
-//        final RecordMetadata recordMetadata = producer.send(record).get();
-//        logger.info(recordMetadata.toString());
-//    }
+    public static Props props(final WebServerConfig config, final WordsTransformer wordsTransformer) {
+        return Props.create(WordsProducerActor.class, () -> new WordsProducerActor(config, wordsTransformer));
+    }
+
+    @Override
+    public Receive createReceive() {
+        return receiveBuilder()
+                .match(WordsListRepresentation.class, wordsListRepresentation -> {
+                    final Words wordsAvro = wordsTransformer.parse(wordsListRepresentation);
+                    logger.info("Parsed json representation to avro {}", wordsAvro.toString());
+                    getSender().tell(Patterns.ask(getSelf(), wordsAvro, Duration.ofMillis(300)), getSelf());
+                })
+                .match(Words.class, words -> getSender().tell(sendToKafka(words), getSelf()))
+                .matchAny(o -> logger.info("received unknown message"))
+                .build();
+    }
+
+
 }

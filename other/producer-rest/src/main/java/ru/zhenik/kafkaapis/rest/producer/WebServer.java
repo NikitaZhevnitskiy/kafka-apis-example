@@ -1,6 +1,7 @@
 package ru.zhenik.kafkaapis.rest.producer;
 
 import akka.NotUsed;
+import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.http.javadsl.ConnectHttp;
 import akka.http.javadsl.Http;
@@ -10,8 +11,8 @@ import akka.http.javadsl.model.HttpResponse;
 import akka.stream.ActorMaterializer;
 import akka.stream.Materializer;
 import akka.stream.javadsl.Flow;
-import ru.zhenik.kafkaapis.rest.producer.infrastructure.WordsProducer;
-import ru.zhenik.kafkaapis.rest.producer.interfaces.rest.Router;
+import ru.zhenik.kafkaapis.rest.producer.infrastructure.WordsProducerActor;
+import ru.zhenik.kafkaapis.rest.producer.interfaces.rest.WebServerRoutes;
 import ru.zhenik.kafkaapis.rest.producer.interfaces.rest.model.WordsTransformer;
 
 import java.io.IOException;
@@ -26,10 +27,11 @@ public class WebServer {
         final WebServerConfig serverConfig = WebServerConfig.load();
 
         final Http http = Http.get(system);
-        final WordsProducer wordsProducer = new WordsProducer(serverConfig);
-        final Router router = new Router(new WordsTransformer(), wordsProducer);
 
-        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = router.createRoute().flow(system, materializer);
+        final ActorRef wordsProducerActor = system.actorOf(WordsProducerActor.props(serverConfig, new WordsTransformer()), "wordsProducerActor");
+        final WebServerRoutes webServerRoutes = new WebServerRoutes(system, wordsProducerActor);
+
+        final Flow<HttpRequest, HttpResponse, NotUsed> routeFlow = webServerRoutes.createRoute().flow(system, materializer);
         final CompletionStage<ServerBinding> binding = http.bindAndHandle(routeFlow,
                 ConnectHttp.toHost("localhost", 8080), materializer);
 
