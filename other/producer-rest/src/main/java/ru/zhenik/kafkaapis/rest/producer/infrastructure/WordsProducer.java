@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+// todo: make actor
 public class WordsProducer {
 
     private static final Logger logger = Logger.getLogger(WordsProducer.class.getName());
