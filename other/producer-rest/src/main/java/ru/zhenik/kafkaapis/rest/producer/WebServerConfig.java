@@ -7,18 +7,20 @@ public class WebServerConfig {
 
     public final KafkaConfig kafkaConfig;
 
-    private WebServerConfig(KafkaConfig kafkaConfig) { this.kafkaConfig = kafkaConfig; }
+    private WebServerConfig(KafkaConfig kafkaConfig) {
+        this.kafkaConfig = kafkaConfig;
+    }
 
     public static WebServerConfig load() {
         final Config defaultConfig = ConfigFactory.load();
         final String bootstrapServers = defaultConfig.getString("rest-producer.kafka.bootstrap-servers");
         final String schemaUrl = defaultConfig.getString("rest-producer.kafka.schema-registry");
         final String topic = defaultConfig.getString("rest-producer.kafka.topic");
-        return new WebServerConfig(new KafkaConfig(bootstrapServers,schemaUrl,topic));
+        return new WebServerConfig(new KafkaConfig(bootstrapServers, schemaUrl, topic));
     }
 
 
-    static class KafkaConfig{
+    public static class KafkaConfig {
         public final String bootstrapServers;
         public final String schemaRegistry;
         public final String topic;
